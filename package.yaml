@@ -1,0 +1,28 @@
+name: tagless-final
+version:  0
+synopsis: Code examples from the papers on tagless-final interpreters
+description: |
+  A domain specific lanaguage for procedures.
+
+stability: experimental
+license: CC-BY-4.0
+author: Oleg Kiselyov
+maintainer: Andrew Cowie <andrew@operationaldynamics.com>
+copyright: © 2002-2011? Oleg Kiselyov
+category: Examples
+tested-with: GHC == 8.6
+github: afcowie/tagless-final
+
+dependencies:
+ - base >= 4.11 && < 5
+
+ghc-options: -Wall -Wwarn -fwarn-tabs
+
+executables:
+  technique:
+    dependencies:
+     - technique
+    ghc-options: -threaded -dynamic
+    source-dirs: src
+    main: Example.hs
+    other-modules: []
