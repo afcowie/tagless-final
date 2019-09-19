@@ -23,8 +23,8 @@ class Symantics repr where
     int :: Int  -> repr Int              -- int literal
     add :: repr Int  -> repr Int -> repr Int
 
-    lam :: (repr a -> repr b) -> repr (a->b)
-    app :: repr (a->b) -> repr a -> repr b
+    lam :: (repr a -> repr b) -> repr (a -> b)
+    app :: repr (a -> b) -> repr a -> repr b
 
 -- * Like ExpSYM, but repr is of kind * -> *
 -- repr is parameterized by the type of the expression
@@ -52,7 +52,7 @@ th3 = lam (\x -> add (app x (int 1)) (int 2))
 -- * //
 -- * Typed and tagless interpreter
 
-newtype R a = R{unR :: a}
+newtype R a = R { unR :: a }
 
 instance Symantics R where
     int x     = R x

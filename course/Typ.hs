@@ -78,8 +78,8 @@ instance TSYM ShowAs where
     tint = ShowAs tint show  -- as Int
     tarr (ShowAs t1 _) (ShowAs t2 _) =
         let t = tarr t1 t2 in
-	ShowAs t (\_ ->  "<function of the type " ++ 
-	                 view_t (unTQ t) ++ ">")
+        ShowAs t (\_ ->  "<function of the type " ++
+                         view_t (unTQ t) ++ ">")
 tt0_show = show_as tint 5
 -- "5"
 
@@ -112,7 +112,7 @@ instance (TSYM trep1, TSYM trep2)
   where
     tint = TCOPY tint tint
     tarr (TCOPY a1 a2) (TCOPY b1 b2) = 
-	TCOPY (tarr a1 b1) (tarr a2 b2)
+        TCOPY (tarr a1 b1) (tarr a2 b2)
 
 -- * //
 -- * Equality and safe type cast
@@ -181,8 +181,8 @@ data AsArrow a =
 
 instance TSYM AsArrow where
     tint       = AsArrow tint Nothing
-    tarr (AsArrow t1 _) (AsArrow t2 _) = 
-	         AsArrow (tarr t1 t2) $ Just (t1,t2,refl)
+    tarr (AsArrow t1 _) (AsArrow t2 _) =
+                 AsArrow (tarr t1 t2) $ Just (t1,t2,refl)
 
 as_arrow :: AsArrow a -> AsArrow a
 as_arrow = id
@@ -193,14 +193,14 @@ newtype SafeCast a = SafeCast (forall b. TQ b -> Maybe (EQU a b))
 
 instance TSYM SafeCast where
     tint = SafeCast $ \tb -> 
-	     case unTQ tb of AsInt eq -> fmap symm eq
+             case unTQ tb of AsInt eq -> fmap symm eq
     tarr (SafeCast t1) (SafeCast t2) = 
-	 SafeCast $ \tb -> do
-	     AsArrow _ (Just (b1,b2,equ_bb1b2)) <- 
-		 return $ as_arrow (unTQ tb)
-	     equ_t1b1 <- t1 b1
-	     equ_t2b2 <- t2 b2
-	     return $ tran (eq_arr equ_t1b1 equ_t2b2) (symm equ_bb1b2)
+         SafeCast $ \tb -> do
+             AsArrow _ (Just (b1,b2,equ_bb1b2)) <-
+                 return $ as_arrow (unTQ tb)
+             equ_t1b1 <- t1 b1
+             equ_t2b2 <- t2 b2
+             return $ tran (eq_arr equ_t1b1 equ_t2b2) (symm equ_bb1b2)
 
 
 -- * Cf. Data.Typeable.gcast
@@ -212,7 +212,7 @@ instance TSYM SafeCast where
 safe_gcast :: TQ a -> c a -> TQ b -> Maybe (c b)
 safe_gcast (TQ ta) ca tb = cast ta
  where cast (SafeCast f) = 
-	 maybe Nothing (\equ -> Just (equ_cast equ ca)) $ f tb
+         maybe Nothing (\equ -> Just (equ_cast equ ca)) $ f tb
 
 -- There is a tantalizing opportunity of making SafeCast extensible
 
