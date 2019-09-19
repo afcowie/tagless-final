@@ -21,7 +21,7 @@ module TypeCheck where
 -- * No import Data.Typeable
 import Typ hiding (main)                -- Our version of Typeable
 import Control.Monad
-import Control.Monad.Error
+import Control.Monad.Except
 
 import TTFdB hiding (main)                -- we use de Bruijn indices
 
