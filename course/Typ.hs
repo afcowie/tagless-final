@@ -18,7 +18,7 @@ import Control.Monad.Except
 
 class TSYM trepr where
     tint :: trepr Int
-    tarr :: trepr a -> trepr b -> trepr (a->b)
+    tarr :: trepr a -> trepr b -> trepr (a -> b)
 
 -- * The view interpreter
 -- The first interpreter is to view the types
@@ -149,7 +149,7 @@ newtype F1 t b a = F1{unF1:: EQU t (a->b)}
 
 newtype F2 t a b = F2{unF2:: EQU t (a->b)}
 
-eq_arr :: EQU a1 a2 -> EQU b1 b2 -> EQU (a1->b1) (a2->b2)
+eq_arr :: EQU a1 a2 -> EQU b1 b2 -> EQU (a1 -> b1) (a2 -> b2)
 eq_arr a1a2 b1b2 = 
     unF2 . equ_cast b1b2 . F2 . unF1 . equ_cast a1a2 . F1 $ refl
 

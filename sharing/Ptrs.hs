@@ -6,7 +6,7 @@ module Ptrs where
 
 import Control.Monad.State
 
-import Data.IORef			-- for observable sharing
+import Data.IORef                        -- for observable sharing
 import System.IO.Unsafe
 
 -- All three approaches are based on a sort of `pointer' comparison.
@@ -121,14 +121,14 @@ draw a circuit, instead of defining the circuit directly."[33]''
 -}
 
 expM_a = do 
-	 xv <- constM 10 
-	 yv <- varM "i1"
-	 addM xv yv
+         xv <- constM 10 
+         yv <- varM "i1"
+         addM xv yv
 
 expM_b = do 
-	 xv <- expM_a
-	 yv <- varM "i2"
-	 addM xv yv
+         xv <- expM_a
+         yv <- varM "i2"
+         addM xv yv
 {-
 *Ptrs> run_expM expM_b
 AddL 4 (AddL 2 (ConstantL 0 10) (VariableL 1 "i1")) (VariableL 3 "i2")

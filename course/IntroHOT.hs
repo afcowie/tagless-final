@@ -11,12 +11,12 @@ module IntroHOT where
 -- The language is simply typed lambda-calculus with booleans,
 -- and de Bruijn encoding of variables.
 
-data Var = VZ | VS Var			-- de Bruijn indices
+data Var = VZ | VS Var                        -- de Bruijn indices
 
 data Exp = V Var 
-	 | B Bool 			-- Boolean literal
-	 | L Exp 			-- Abstraction
-	 | A Exp Exp			-- Application
+         | B Bool                         -- Boolean literal
+         | L Exp                         -- Abstraction
+         | A Exp Exp                        -- Application
 
 -- Lookup in the environment
 lookp VZ (x:_) = x
@@ -52,7 +52,7 @@ eval env (V v) = lookp v env
 eval env (B b) = UB b
 eval env (L e) = UA (\x -> eval (x:env) e)
 eval env (A e1 e2) = case eval env e1 of
-		      UA f -> f (eval env e2)
+                      UA f -> f (eval env e2)
 -- the inferred type
 -- eval :: [U] -> Exp -> U
 

@@ -12,9 +12,9 @@ import Control.Monad
 
 -- Data type of trees representing our expressions `on the wire'
 -- Our wire format is essentially JASON
-data Tree = Leaf String			-- atom
-	  | Node String [Tree]		-- collection
-	    deriving (Eq, Read, Show)
+data Tree = Leaf String                        -- atom
+          | Node String [Tree]                -- collection
+            deriving (Eq, Read, Show)
 
 -- Serializer for Exp -- just another interpreter, similar
 -- to the ones we have seen
@@ -53,8 +53,8 @@ type ErrMsg = String
 
 safeRead :: Read a => String -> Either ErrMsg a
 safeRead s = case reads s of
-	      [(x,"")] -> Right x
-	      _        -> Left $ "Read error: " ++ s
+              [(x,"")] -> Right x
+              _        -> Left $ "Read error: " ++ s
 
 -- * //
 
@@ -72,7 +72,7 @@ tf1'_eval =
     let tf1' = fromTree tf1_tree
     in case tf1' of
         Left  e -> putStrLn $ "Error: " ++ e
-	Right x -> print $ eval x
+        Right x -> print $ eval x
 -- 5
 
 -- But we wish to evaluate the de-serialized term several times,
@@ -83,9 +83,9 @@ tf1'_evew' =
     let tf1' = fromTree tf1_tree
     in case tf1' of
         Left  e -> putStrLn $ "Error: " ++ e
-	Right x -> do
-		   print $ eval x 
-		   print $ view x 
+        Right x -> do
+                   print $ eval x 
+                   print $ view x 
 
 And here we get the type error:
     Couldn't match expected type `String' against inferred type `Int'
@@ -153,7 +153,7 @@ Node "Add" ...
 
 -- The signature could have been inferred
 fromTreeExt :: (ExpSYM repr) => 
-	       (Tree -> Either ErrMsg repr) -> Tree -> Either ErrMsg repr
+               (Tree -> Either ErrMsg repr) -> Tree -> Either ErrMsg repr
 fromTreeExt self (Node "Lit" [Leaf n]) = liftM lit $ safeRead n
 fromTreeExt self (Node "Neg" [e])      = liftM neg $ self e
 fromTreeExt self (Node "Add" [e1,e2])  = liftM2 add (self e1) (self e2)
@@ -163,7 +163,7 @@ fromTreeExt self e = Left $ "Invalid tree: " ++ show e
 
 fix f = f (fix f)
 
-fromTree' = fix fromTreeExt		-- One does use fix in real programs
+fromTree' = fix fromTreeExt                -- One does use fix in real programs
 
 
 tf1E_int3 = check_consume thrice . fromTree' $ tf1_tree

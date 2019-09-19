@@ -7,13 +7,13 @@
 
 
 module ExpF (Exp(..),
-	     ExpI(..),
-	     R(..),
-	     N(..),NodeId, DAG(..),
-	     run_expN,
-	     do_bench,
+             ExpI(..),
+             R(..),
+             N(..),NodeId, DAG(..),
+             run_expN,
+             do_bench,
              mul,
-	    ) where
+            ) where
 
 import Control.Monad.State
 import BiMap
@@ -109,7 +109,7 @@ newtype R t = R{unR :: REnv -> t} -- A reader Monad, actually
 instance Exp R where
     constant x = R (\_ -> x)
     variable x = R (\env -> maybe (error $ "no var: " ++ x) id $ 
-		     lookup x env)
+                     lookup x env)
     add e1 e2  = R (\env -> unR e1 env + unR e2 env)
 
 
@@ -138,9 +138,9 @@ type NodeId = Int
 -- We stress: Node is NOT a recursive data structure, so the comparison
 -- of Node values takes constant time!
 data Node = NConst Int
-	  | NVar   String
-	  | NAdd   !NodeId !NodeId
-	    deriving (Eq,Ord,Show)
+          | NVar   String
+          | NAdd   !NodeId !NodeId
+            deriving (Eq,Ord,Show)
 
 -- we could use several bimaps for different operations (for
 -- addition, subtraction, etc).
@@ -186,9 +186,9 @@ instance Exp N where
   constant x = N(hashcons $ NConst x)
   variable x = N(hashcons $ NVar x)
   add e1 e2  = N(do
-		 h1 <- unN e1
-		 h2 <- unN e2
-		 hashcons $ NAdd h1 h2)
+                 h1 <- unN e1
+                 h2 <- unN e2
+                 hashcons $ NAdd h1 h2)
 
 -- * The state is hidden behind the tagless-final veneer
 
@@ -316,7 +316,7 @@ do_bench :: (a,DAG) -> Int
 do_bench (_,DAG d) = size d
 
 bench_mul n = do_bench $ 
-	      run_expN (mul n (variable "i"))
+              run_expN (mul n (variable "i"))
 
 
 -- It takes effort to find the common subexpressions, just because

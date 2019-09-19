@@ -51,8 +51,8 @@ tfm2_view = view tfm2
 -- and the extended ones (which we have just defined)
 -- into the same list
 
-tfl1 = [F.tf1]				-- old expression
-tfl2 = tfm1 : tfm2 : tfl1		-- add extended expressions
+tfl1 = [F.tf1]                                -- old expression
+tfl2 = tfm1 : tfm2 : tfl1                -- add extended expressions
 
 -- The inferred type of tfl2 is insightful:
 -- *ExtF> :t tfl1

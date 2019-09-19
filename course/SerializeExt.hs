@@ -19,11 +19,11 @@ module SerializeExt where
 
 -- We really are re-using the existing code (which may already be compiled):
 import Intro2 hiding (main)
-import ExtF hiding (main)	     -- import the extended `variant': Mul
+import ExtF hiding (main)             -- import the extended `variant': Mul
 
-import Serialize (Tree(..))	     -- import the wire format
-				     -- import the original serializer
-import qualified Serialize as S	hiding (main)
+import Serialize (Tree(..))             -- import the wire format
+                                     -- import the original serializer
+import qualified Serialize as S        hiding (main)
 import Control.Monad
 
 -- * //
@@ -66,7 +66,7 @@ fromTreeExt self (Node "Mul" [e1,e2]) = liftM2 mul (self e1) (self e2)
 fromTreeExt self e = S.fromTreeExt self e -- use the old one for the rest
 
 -- * Tie up the knot
-fromTree = S.fix fromTreeExt		-- One does use fix in real programs
+fromTree = S.fix fromTreeExt                -- One does use fix in real programs
 
 -- Now we can see the real benefit of using fix in real programs.
 -- The fixpoint combinator is NOT a mere curiosity

@@ -20,7 +20,7 @@ import BiMap
 -- * A sub-DSL of arithmetic expressions, embedded as a datatype
 
 data Exp
-   = Add Exp Exp			-- one can add Sub, Neg, etc.
+   = Add Exp Exp                        -- one can add Sub, Neg, etc.
    | Variable String
    | Constant Int
    deriving (Eq, Ord, Show)

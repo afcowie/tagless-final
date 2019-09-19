@@ -115,7 +115,7 @@ val_mul4' = unR exp_mul4' [("i1",5)] -- 20
 -- (as let-expressions) we need a way to generate `pointers',
 -- or local variable names.
 
-type LetVarCount = Int			-- counter for generating let-var-names
+type LetVarCount = Int                        -- counter for generating let-var-names
 newtype S t = S{unS :: LetVarCount -> String}
 
 instance Exp S where
@@ -125,8 +125,8 @@ instance Exp S where
 
 instance ExpLet S where
     let_ e f  = S(\c -> let vname = "v" ++ show c
-		        in unwords ["let",vname,"=",unS e c,
-				    "in",unS (f (S (const vname))) (succ c)])
+                        in unwords ["let",vname,"=",unS e c,
+                                    "in",unS (f (S (const vname))) (succ c)])
 
 run_expS :: S t -> String
 run_expS (S m) = m 0
@@ -143,8 +143,8 @@ sh_mul4' = run_expS exp_mul4'
 -- result. The code below says exactly that.
 instance ExpLet N where
     let_ e f = N(do
-		 x <- unN e
-		 unN $ f (N (return x)))
+                 x <- unN e
+                 unN $ f (N (return x)))
 
 -- Now, we can evaluate exp_mul4' as a DAG
 -- The result is the same as dag_mul4.
@@ -174,7 +174,7 @@ sh_mul4'' = run_expS (mul' 4 (variable "i1"))
 -- * //
 -- * Benchmarking. Compare with bench12 and bench13 from ExpF.hs
 bench_mul' n = do_bench $
-	       run_expN (mul' n (variable "i"))
+               run_expN (mul' n (variable "i"))
 
 bench12 = bench_mul' (2^12)
 bench13 = bench_mul' (2^13)

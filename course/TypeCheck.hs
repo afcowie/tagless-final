@@ -23,7 +23,7 @@ import Typ hiding (main)                -- Our version of Typeable
 import Control.Monad
 import Control.Monad.Error
 
-import TTFdB hiding (main)		-- we use de Bruijn indices
+import TTFdB hiding (main)                -- we use de Bruijn indices
 
 
 
@@ -31,9 +31,9 @@ import TTFdB hiding (main)		-- we use de Bruijn indices
 -- * Serialized expressions are _untyped_
 -- All content is in the form of character string
 -- Imagine the following to be XML, only more compact
-data Tree = Leaf String			-- CDATA
-	  | Node String [Tree]		-- element with its children
-	    deriving (Eq, Read, Show)
+data Tree = Leaf String                        -- CDATA
+          | Node String [Tree]                -- element with its children
+            deriving (Eq, Read, Show)
 
 
 -- * Expression format (extensible)
@@ -45,7 +45,7 @@ data Tree = Leaf String			-- CDATA
 -- *  ...
 -- *
 -- * Format of types
--- *  Node "TInt" []		-- Int
+-- *  Node "TInt" []                -- Int
 -- *  Node "TArr" [e1,e2]       -- e1 -> e2
 -- *  ...
 
@@ -133,7 +133,7 @@ read_t tree = fail $ "Bad type expression: " ++ show tree
 -- Again we will use the error monad to report errors.
 -- Thus the tentative type for typecheck is
 -- * typecheck :: Symantics repr => 
--- *	     Tree -> Either String (DynTerm h repr)
+-- *             Tree -> Either String (DynTerm h repr)
 --
 -- * Open terms may legitimately occur
 -- First of all, when processing the body of abstractions.
@@ -142,7 +142,7 @@ read_t tree = fail $ "Bad type expression: " ++ show tree
 -- which is a map from variable names to their types. Hence
 -- type-check should have this signature:
 -- * typecheck :: Symantics repr => 
--- *	     Tree -> Gamma -> Either String (DynTerm h repr)
+-- *             Tree -> Gamma -> Either String (DynTerm h repr)
 -- But Gamma and h are related! We should make it explicit that
 -- Gamma (type checking environment) determines h (the run-time environment
 -- of a term).
@@ -158,7 +158,7 @@ data VarDesc t = -- Component of Gamma
 -- * Relating Gamma and h
 class Var gamma h | gamma -> h where
     findvar :: Symantics repr =>
-	       VarName -> gamma -> Either String (DynTerm repr h)
+               VarName -> gamma -> Either String (DynTerm repr h)
 
 -- Like asTypeOf, used to specialize polymorphic term repr h t
 -- to a specific type t
@@ -170,16 +170,16 @@ instance Var () () where
 
 instance Var gamma h => Var (VarDesc t,gamma) (t,h) where
     findvar name (VarDesc tr name',_) | name == name' =
-	 return $ DynTerm tr z
+         return $ DynTerm tr z
 
     findvar name (_,gamma) = do
          DynTerm tr v <- findvar name gamma
-	 return $ DynTerm tr (s v)
+         return $ DynTerm tr (s v)
 
 
 -- * //
 typecheck :: (Symantics repr, Var gamma h) =>
-	     Tree -> gamma -> Either String (DynTerm repr h)
+             Tree -> gamma -> Either String (DynTerm repr h)
 
 typecheck (Node "Int" [Leaf str]) gamma =
     case reads str of
@@ -212,7 +212,7 @@ typecheck (Node "App" [e1, e2]) gamma = do
   case safe_gcast (TQ t2) d2 ta of 
     Just da -> return . DynTerm tb $ app df da
     _ -> fail $ unwords ["Bad types of the application:", 
- 			 view_t t1, "and", view_t t2]
+                          view_t t1, "and", view_t t2]
 
 typecheck e gamma = fail $ "Invalid Tree: " ++ show e
 
@@ -227,22 +227,22 @@ tx1 = typecheck
 
 tx2 = typecheck 
        (Node "Lam" [Leaf "x",Node "TInt" [],
-		    Node "Var" [Leaf "x"]]) ()
+                    Node "Var" [Leaf "x"]]) ()
 tx3 = typecheck 
        (Node "Lam" [Leaf "x",Node "TInt" [],
-	  Node "Lam" [Leaf "y",Node "TInt" [],
-		    Node "Var" [Leaf "x"]]]) ()
+          Node "Lam" [Leaf "y",Node "TInt" [],
+                    Node "Var" [Leaf "x"]]]) ()
 
 tx4 = typecheck 
        (Node "Lam" [Leaf "x",Node "TInt" [],
-	  Node "Lam" [Leaf "y",Node "TInt" [],
-	    Node "Add" [Node "Int" [Leaf "10"],
-			Node "Var" [Leaf "x"]]]]) ()
+          Node "Lam" [Leaf "y",Node "TInt" [],
+            Node "Add" [Node "Int" [Leaf "10"],
+                        Node "Var" [Leaf "x"]]]]) ()
 
 
 tx_view t = case t of
-		 Right (DynTerm _ t) -> view t
-		 Left err -> error err
+                 Right (DynTerm _ t) -> view t
+                 Left err -> error err
 
 tx1_view = tx_view tx1
 
@@ -275,9 +275,9 @@ instance Symantics CL where
 
 tc_evalview exp = do
  DynTerm tr d <- typecheck exp ()
- let d' = unCL d				-- Make d polymorphic again
+ let d' = unCL d                                -- Make d polymorphic again
  return $ (show_as tr $ eval d',
-	   view d')
+           view d')
  
 -- * A few combinators to help build trees
 -- XML, or even its abstractions, are too verbose
@@ -300,13 +300,13 @@ dt2 = tc_evalview (tr_app (tr_int 1) (tr_int 2))
 
 dt4 = tc_evalview 
        (tr_lam "x" tr_tint (tr_lam "y" (tr_tint `tr_tarr` tr_tint) 
-	    (tr_lam "z" tr_tint (tr_var "y"))))
+            (tr_lam "z" tr_tint (tr_var "y"))))
 -- Right ("<function of the type (Int -> ((Int -> Int) -> (Int -> (Int -> Int))))>",
 --        "(\\x0 -> (\\x1 -> (\\x2 -> x1)))")
 
 dt41 = tc_evalview 
          (tr_lam "x" tr_tint (tr_lam "y" (tr_tint `tr_tarr` tr_tint) 
-	    (tr_lam "z" tr_tint (tr_var "x"))))
+            (tr_lam "z" tr_tint (tr_var "x"))))
 -- Right ("<function of the type (Int -> ((Int -> Int) -> (Int -> Int)))>",
 --        "(\\x0 -> (\\x1 -> (\\x2 -> x0)))")
 
@@ -317,13 +317,13 @@ dt5 = tc_evalview (tr_lam "x" tr_tint (tr_add (tr_var "x") (tr_int 1)))
 
 -- Making a deliberate mistake...
 dt6 = tc_evalview (tr_lam "x" (tr_tint `tr_tarr` tr_tint)
-	            (tr_add (tr_var "x") (tr_int 1)))
+                    (tr_add (tr_var "x") (tr_int 1)))
 -- Left "Bad type of a summand: (Int -> Int)"
 
 -- Untyped Church Numeral 2
 exp_n2 = (tr_lam "f" (tr_tint `tr_tarr` tr_tint)
           (tr_lam "x" tr_tint
-	      (tr_app (tr_var "f") (tr_app (tr_var "f") (tr_var "x")))))
+              (tr_app (tr_var "f") (tr_app (tr_var "f") (tr_var "x")))))
 
 dt7 = tc_evalview exp_n2
 -- Right ("<function of the type ((Int -> Int) -> (Int -> Int))>",

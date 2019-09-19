@@ -27,7 +27,7 @@ import PushNegI as Neg hiding (main)
 
 flata :: Exp -> Exp
 flata e@Lit{} = e
-flata e@Neg{} = e			-- assumed negations are pushed down
+flata e@Neg{} = e                        -- assumed negations are pushed down
 flata (Add (Add e1 e2) e3) = flata (Add e1 (Add e2 e3))
 flata (Add e1 e2) = Add e1 (flata e2)
 
@@ -68,4 +68,4 @@ main = do
        print ti3_norm_view
        print ti3_norm_eval
        if ti3_eval == ti3_norm_eval then return ()
-	  else error "Normalization"
+          else error "Normalization"

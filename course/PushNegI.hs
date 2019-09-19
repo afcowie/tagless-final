@@ -84,11 +84,11 @@ main = do
        print ti1_norm_view
        print ti1n_norm_view
        if ti1_norm_view == ti1nn_norm_view then return ()
-	  else error "Double neg"
+          else error "Double neg"
        if eval ti1 == ti1_norm_eval then return ()
-	  else error "Normalization"
+          else error "Normalization"
        if eval ti1 == - ti1n_norm_eval then return ()
-	  else error "Normalization"
+          else error "Normalization"
        print ti1nn_norm_view
        
 

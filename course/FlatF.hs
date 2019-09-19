@@ -41,7 +41,7 @@ instance ExpSYM repr => ExpSYM (Ctx repr -> repr) where
     add e1 e2 ctx  = e1 (LCA (e2 ctx))
 
 -- The last clause expresses the reassociation-to-the-right
--- *	C[Add e1 e2] -> Add e1 C[e2]
+-- *        C[Add e1 e2] -> Add e1 C[e2]
 -- Recall that after the negations are pushed down, expressions are
 -- described by the following grammar
 -- *    e ::= factor | add e e
@@ -117,15 +117,15 @@ main = do
        print tf3_norm_view
        print tf3_norm_eval
        if tf3_eval == tf3_norm_eval then return ()
-	  else error "Normalization"
+          else error "Normalization"
        -- normalizing a normal form does not change it
        if (view . norm $ tf3_norm) == tf3_norm_view then return ()
-	  else error "Normalization"
+          else error "Normalization"
        print tf4_view
        print tf4_eval
        print tf4_norm_view
        print tf4_norm_eval
        if tf4_eval == tf4_norm_eval then return ()
-	  else error "Normalization"
+          else error "Normalization"
        if (view . norm $ tf4_norm) == tf4_norm_view then return ()
-	  else error "Normalization"
+          else error "Normalization"

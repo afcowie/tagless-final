@@ -11,7 +11,7 @@ import qualified Intro1 as Old
 -- that uses Intro1.hs (in particular, all the interpreters)
 
 data Exp = EOld Old.Exp
-	 | Mul Exp Exp			-- add a new variant
+         | Mul Exp Exp                        -- add a new variant
 
 -- An extended sample expression
 tim2 = Mul (EOld (Old.Lit 7)) (EOld Old.ti1)
@@ -21,7 +21,7 @@ tim2 = Mul (EOld (Old.Lit 7)) (EOld Old.ti1)
 -- Why does the following fails to type check?
 {-
 tim1 = EOld (Old.Add (Old.Lit 7) 
-	     (Old.Neg (Mul (EOld (Old.Lit 1)) (EOld (Old.Lit 2)))))
+             (Old.Neg (Mul (EOld (Old.Lit 1)) (EOld (Old.Lit 2)))))
 
 -}
 

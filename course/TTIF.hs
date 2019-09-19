@@ -5,7 +5,7 @@
 
 module TTIF where
 
-import TTF as F hiding (main)	-- The final embedding
+import TTF as F hiding (main)        -- The final embedding
 
 -- * Initial embedding of our language, in HOAS
 -- * (superset of the running example in Xi, Chen and Chen (POPL2003))
@@ -116,7 +116,7 @@ viewI' (Leq e1 e2) = \h ->
       "(" ++ viewI' e1 h ++ "<=" ++ viewI' e2 h ++ ")"
 viewI' (IF be et ee) = \h -> 
        unwords["(if", viewI' be h, "then", viewI' et h, 
-	       "else", viewI' ee h,")"]
+               "else", viewI' ee h,")"]
 
 viewI' (Var x) = unS x
 viewI' (Lam e) = \h ->
@@ -224,7 +224,7 @@ i2f (Add e1 e2) = add (i2f e1) (i2f e2)
 i2f (Mul e1 e2) = mul (i2f e1) (i2f e2)
 i2f (Leq e1 e2) = leq (i2f e1) (i2f e2)
 i2f (IF be et ee) = if_ (i2f be) (i2f et) (i2f ee)
-i2f (Var v) = v				-- polymorphic lift
+i2f (Var v) = v                                -- polymorphic lift
 i2f (Lam e) = lam(\x -> i2f (e (Var x)))
 i2f (App e1 e2) = app (i2f e1) (i2f e2)
 i2f (Fix e) = fix(\x -> i2f (e (Var x)))

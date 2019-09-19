@@ -10,18 +10,18 @@
 module PushNegFI where
 
 -- Explain the imports:
-import Intro2 hiding (main)		-- The final representation of Exp
+import Intro2 hiding (main)                -- The final representation of Exp
 
-import Intro1 (Exp(..))			-- import the Exp data type
-import qualified PushNegI as I		-- use the initial push_neg as it was
+import Intro1 (Exp(..))                        -- import the Exp data type
+import qualified PushNegI as I                -- use the initial push_neg as it was
 
 -- * //
 -- We write the interpreter for final terms that produce initial, data type
 -- terms
 
 instance ExpSYM Exp where
-    lit = Lit				-- nice symmetry between upper-and
-    neg = Neg				-- lower case
+    lit = Lit                                -- nice symmetry between upper-and
+    neg = Neg                                -- lower case
     add = Add
 
 initialize :: Exp -> Exp
@@ -31,7 +31,7 @@ initialize = id
 -- We write an evaluator for data type that produces final representation
 -- The analogy with fold must be patent.
 
-finalize :: ExpSYM repr => Exp -> repr	-- could have been inferred
+finalize :: ExpSYM repr => Exp -> repr        -- could have been inferred
 finalize (Lit n) = lit n
 finalize (Neg e) = neg (finalize e)
 finalize (Add e1 e2) = add (finalize e1) (finalize e2)
@@ -77,8 +77,8 @@ tf1nn_norm_view = view tf1nn_norm
 -- * Dictionary translation of ExpSYM repr => repr
 data ExpSYMDict repr = 
     ExpSYMDict{ lit_dict :: Int -> repr,
-		neg_dict :: repr -> repr,
-	        add_dict :: repr -> repr -> repr}
+                neg_dict :: repr -> repr,
+                add_dict :: repr -> repr -> repr}
 type FinTerm repr = ExpSYMDict repr -> repr
 
 -- The evaluator
@@ -90,7 +90,7 @@ eval_dict =
 -- tf1 = add (lit 8) (neg (add (lit 1) (lit 2)))
 tf1' :: FinTerm repr
 tf1' dict = add_dict dict (lit_dict dict 8) 
-	    (neg_dict dict (add_dict dict (lit_dict dict 1) (lit_dict dict 2)))
+            (neg_dict dict (add_dict dict (lit_dict dict 1) (lit_dict dict 2)))
 tf1'_eval = tf1' eval_dict
 -- 5
 
@@ -101,10 +101,10 @@ main = do
        print tf1_norm_view
        print tf1n_norm_view
        if tf1_norm_view == tf1nn_norm_view then return ()
-	  else error "Double neg"
+          else error "Double neg"
        print tf1nn_norm_view
        if eval tf1 == tf1_norm_eval then return ()
-	  else error "Normalization"
+          else error "Normalization"
        if eval tf1 == - tf1n_norm_eval then return ()
-	  else error "Normalization"
+          else error "Normalization"
        print tf1'_eval

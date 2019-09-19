@@ -7,9 +7,9 @@
 module PushNegFExt where
 
 -- Explain the imports
-import Intro2 hiding (main)		-- Exp in the final form
-import PushNegF hiding (main)		-- Push_neg interpreter
-import ExtF hiding (main)		-- `mul' extension
+import Intro2 hiding (main)                -- Exp in the final form
+import PushNegF hiding (main)                -- Push_neg interpreter
+import ExtF hiding (main)                -- `mul' extension
 
 -- * //
 -- But the multiplication is not a homomorphism with respect to negation!
@@ -98,11 +98,11 @@ main = do
        print tfm1nn_norm_view
        print tfm1nn_norm_eval
        if tfm1_norm_view == tfm1nn_norm_view then return ()
-	  else error "Double neg"
+          else error "Double neg"
        if PushNegFExt.tfm1_eval == tfm1_norm_eval then return ()
-	  else error "Normalization"
+          else error "Normalization"
        if PushNegFExt.tfm1_eval == - tfm1n_norm_eval then return ()
-	  else error "Normalization"
+          else error "Normalization"
 
        print PushNegFExt.tfm2_view
        print PushNegFExt.tfm2_eval
@@ -113,10 +113,10 @@ main = do
        print tfm2nn_norm_view
        print tfm2nn_norm_eval
        if tfm2_norm_view == tfm2nn_norm_view then return ()
-	  else error "Double neg"
+          else error "Double neg"
        if PushNegFExt.tfm2_eval == tfm2_norm_eval then return ()
-	  else error "Normalization"
+          else error "Normalization"
        if PushNegFExt.tfm2_eval == - tfm2n_norm_eval then return ()
-	  else error "Normalization"
+          else error "Normalization"
 
 

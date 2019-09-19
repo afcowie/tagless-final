@@ -12,8 +12,8 @@ module Intro1 where
 -- * Deep/initial embedding
 -- The data type of expressions
 data Exp = Lit Int 
-	 | Neg Exp
-	 | Add Exp Exp
+         | Neg Exp
+         | Add Exp Exp
 
 -- A sample expression: our first running example
 ti1 = Add (Lit 8) (Neg (Add (Lit 1) (Lit 2)))
