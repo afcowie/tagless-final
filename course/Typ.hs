@@ -8,7 +8,7 @@
 module Typ where
 
 import Control.Monad
-import Control.Monad.Error
+import Control.Monad.Except
 
 
 -- * The language of type representations: first-order and typed
