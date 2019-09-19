@@ -15,10 +15,13 @@ github: afcowie/tagless-final
 
 dependencies:
  - base >= 4.11 && < 5
+ - containers
  - mtl
 
 ghc-options: -fwarn-tabs -fno-warn-missing-signatures
 
 library:
-  source-dirs: course, sharing
+  source-dirs:
+    - course
+    - sharing
   other-modules: []

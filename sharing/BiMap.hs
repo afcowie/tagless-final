@@ -13,12 +13,12 @@
 -- both parts of the association.
 
 module BiMap (
-	      BiMap, empty,
-	      lookup_key, 
-	      lookup_val, 
-	      insert,
-	      size,
-	     )
+              BiMap, empty,
+              lookup_key,
+              lookup_val,
+              insert,
+              size,
+             )
     where
 
 import qualified Data.Map    as M
