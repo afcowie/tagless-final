@@ -1,4 +1,5 @@
 {-# LANGUAGE NoMonomorphismRestriction #-}
+{-# LANGUAGE FlexibleContexts #-}
 
 -- Embedding Domain-specific languages in pure Haskell
 -- and the explicit representation of sharing. The tagless final approach.
@@ -107,7 +108,7 @@ class Exp repr where
    add  :: repr Int -> repr Int -> repr Int
    sub  :: repr Int -> repr Int -> repr Int
    let_ :: repr a -> (repr a -> repr b) -> repr b 
-   let_ x f = f x		-- default is the reverse application
+   let_ x f = f x                -- default is the reverse application
 
 -- Our expressions here are of only one type, Int. We could have dropped
 -- Int and made 'repr' to be a type variable of the kind *.
@@ -135,7 +136,7 @@ e' = let_ d (\x -> add x x)
 -- We can show the expressions as before: showing is one way
 -- of evaluating things
 
-type LetVarCount = Int			-- counter for generating let-var-names
+type LetVarCount = Int                        -- counter for generating let-var-names
 newtype S t = S{unS :: LetVarCount -> String}
 
 instance Exp S where
@@ -144,8 +145,8 @@ instance Exp S where
     add e1 e2 = S(\c -> unS e1 c ++ " + " ++ unS e2 c)
     sub e1 e2 = S(\c -> unS e1 c ++ " - " ++ unS e2 c)
     let_ e f  = S(\c -> let vname = "v" ++ show c
-		        in unwords ["let",vname,"=",unS e c,
-				    "in",unS (f (S (const vname))) (succ c)])
+                        in unwords ["let",vname,"=",unS e c,
+                                    "in",unS (f (S (const vname))) (succ c)])
 
 -- We can see the difference in what is shared in DSL programs (e) and
 -- (e'). The program (e) uses the identifier (d) twice; even if
@@ -154,13 +155,13 @@ instance Exp S where
 -- observable in Haskell98), what GHC shares are metalanguage
 -- computations. Although the metalanguage (Haskell) is pure, the object
 -- language does not have to be. Indeed, the common-subexpression
--- elimination (see evaluator A below), when considered as an 
--- evaluation of an object expression, is an impure evaluation. 
+-- elimination (see evaluator A below), when considered as an
+-- evaluation of an object expression, is an impure evaluation.
 -- The same object expression may give, in different contexts, different
 -- results (that is, compile to different assembly code). 
 -- In the case of (e'), we explicitly stated that "d" is a common
 -- sub-expression. It must be executed once, with the results shared.
-		  
+
 test_showe = unS e 0
 
 {-
@@ -183,7 +184,7 @@ newtype R t = R{unR :: REnv -> t} -- A reader Monad, actually
 instance Exp R where
     constant x = R $ const x
     variable x = R ( \env -> maybe (error $ "no var: " ++ x) id $ 
-		     Prelude.lookup x env)
+                     Prelude.lookup x env)
     add e1 e2 = R(\env -> unR e1 env + unR e2 env)
     sub e1 e2 = R(\env -> unR e1 env - unR e2 env)
 
@@ -206,17 +207,17 @@ type ExpHash = Int
 -- We stress: ACode is NOT a recursive data structure, so the comparison
 -- of ACode values takes constant time!
 data ACode = AConst ExpHash |
-	     AVar   ExpHash |
-	     AAdd   ExpHash |
-	     ASub   ExpHash
-	     deriving (Eq,Show)
+             AVar   ExpHash |
+             AAdd   ExpHash |
+             ASub   ExpHash
+             deriving (Eq,Show)
 
 data ExpMaps = ExpMaps{ hashcnt :: ExpHash, -- to generate new Hash
-			ctmap :: IntMap Int,
-			vrmap :: IntMap String,
-			admap :: IntMap (ACode,ACode),
-			sumap :: IntMap (ACode,ACode)}
-	     deriving Show
+                        ctmap :: IntMap Int,
+                        vrmap :: IntMap String,
+                        admap :: IntMap (ACode,ACode),
+                        sumap :: IntMap (ACode,ACode)}
+             deriving Show
 exmap0 = ExpMaps 0 IM.empty IM.empty IM.empty IM.empty
 
 
@@ -227,35 +228,35 @@ newtype A t = A{unA :: State ExpMaps ACode}
 -- bimaps.
 
 loookupv :: Eq v => v -> IntMap v -> Maybe Int
-loookupv v = IM.foldWithKey 
-	     (\k e z -> maybe (if e == v then Just k else Nothing) (const z) z) 
-	     Nothing
+loookupv v = IM.foldrWithKey
+             (\k e z -> maybe (if e == v then Just k else Nothing) (const z) z)
+             Nothing
 
 
 record con prj upd x = do
   s <- get
   maybe (do let s' = upd (s{hashcnt = succ (hashcnt s)})
-		         (IM.insert (hashcnt s) x (prj s))
-	    put s'
-	    -- trace "updating map" (return ())
-	    return (con $ hashcnt s))
+                         (IM.insert (hashcnt s) x (prj s))
+            put s'
+            -- trace "updating map" (return ())
+            return (con $ hashcnt s))
         (return . con) $ loookupv x (prj s)
 
 instance Exp A where
     constant x = A(record AConst ctmap (\s e -> s{ctmap = e}) x)
     variable x = A(record AVar vrmap (\s e -> s{vrmap = e}) x)
     add e1 e2  = A(do
-		   h1 <- unA e1
-		   h2 <- unA e2
-		   record AAdd admap (\s e -> s{admap = e}) (h1,h2))
+                   h1 <- unA e1
+                   h2 <- unA e2
+                   record AAdd admap (\s e -> s{admap = e}) (h1,h2))
     sub e1 e2  = A(do
-		   h1 <- unA e1
-		   h2 <- unA e2
-		   record ASub sumap (\s e -> s{sumap = e}) (h1,h2))
+                   h1 <- unA e1
+                   h2 <- unA e2
+                   record ASub sumap (\s e -> s{sumap = e}) (h1,h2))
 
     let_ e f = A(do
-		 x <- unA e
-		 unA $ f (A (return x)))
+                 x <- unA e
+                 unA $ f (A (return x)))
 
 -- Again, we are using the very same expression e we wrote at the very
 -- beginning:
